@@ -1,5 +1,3 @@
-using Catalog.API.Products.CreateProduct;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddMediatR(config =>
@@ -7,10 +5,12 @@ builder.Services.AddMediatR(config =>
     config.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
 
-builder.Services.AddCarter(configurator: c =>
+builder.Services.AddCarter();
+
+builder.Services.AddMarten(options =>
 {
-    c.WithModule<CreateProductEndpoint>(); // Replace "YourCarterModule" with the actual module class name
-});
+    options.Connection(builder.Configuration.GetConnectionString("Database")!);
+}).UseLightweightSessions();
 
 var app = builder.Build();
 
