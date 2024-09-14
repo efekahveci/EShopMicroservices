@@ -1,15 +1,16 @@
-using BuildingBlocks.Behaviors;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 var assembly = typeof(Program).Assembly;
+
+var connString = builder.Configuration.GetConnectionString("Database");
 
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
     config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssembly(assembly);
 
@@ -17,39 +18,27 @@ builder.Services.AddCarter();
 
 builder.Services.AddMarten(options =>
 {
-    options.Connection(builder.Configuration.GetConnectionString("Database")!);
+    options.Connection(connString!);
 }).UseLightweightSessions();
+
+if (builder.Environment.IsDevelopment())
+    builder.Services.InitializeMartenWith<CatalogInitialData>();
+
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+builder.Services.AddHealthChecks().AddNpgSql(connString!);
 
 var app = builder.Build();
 
+app.MapDefaultEndpoints();
+
 app.MapCarter();
 
-app.UseExceptionHandler(exceptionHandlerApp =>
-{
-    exceptionHandlerApp.Run(async context =>
+app.UseExceptionHandler(opt => { });
+
+app.UseHealthChecks("/health", new HealthCheckOptions
     {
-        var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
-        if (exception == null)
-        {
-            return;
-        }
-
-        var problemDetails = new ProblemDetails
-        {
-            Title = exception.Message,
-            Status = StatusCodes.Status500InternalServerError,
-            Detail = exception.StackTrace
-        };
-
-        var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-        logger.LogError(exception, "An error occurred: {Message}", exception.Message);
-
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        context.Response.ContentType = "application/problem+json";
-
-        await context.Response.WriteAsJsonAsync(problemDetails);
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
-});
-
 
 app.Run();
