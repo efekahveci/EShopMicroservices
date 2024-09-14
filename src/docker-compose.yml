@@ -10,9 +10,21 @@ services:
   #     context: .
   #     dockerfile: Services/Catalog/Catalog.API/Dockerfile
 
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "4050:80"
+    depends_on:
+      - catalogdb
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
 volumes:
   postgres_catalog:
-
+  pgadmin_data:
 
 
 

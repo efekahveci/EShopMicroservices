@@ -1,7 +1,7 @@
 ﻿namespace Catalog.API.Products.DeleteProduct;
 
 public record DeleteProductRequest(Guid Id);
-public record DeleteProductResponse(Guid Guid);
+public record DeleteProductResponse(bool IsSuccess);
 
 public class DeleteProductEndpoint : ICarterModule
 {
