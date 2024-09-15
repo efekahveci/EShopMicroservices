@@ -1,7 +1,5 @@
 var builder = WebApplication.CreateBuilder(args);
 
-builder.AddServiceDefaults();
-
 var assembly = typeof(Program).Assembly;
 
 var connString = builder.Configuration.GetConnectionString("Database");
@@ -29,8 +27,6 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddHealthChecks().AddNpgSql(connString!);
 
 var app = builder.Build();
-
-app.MapDefaultEndpoints();
 
 app.MapCarter();
 
