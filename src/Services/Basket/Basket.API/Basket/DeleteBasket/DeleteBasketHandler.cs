@@ -11,16 +11,12 @@ public class DeleteBasketCommandValidator : AbstractValidator<DeleteBasketComman
     }
 }
 
-public class DeleteBasketCommandHandler : ICommandHandler<DeleteBasketCommand, DeleteBasketResult>
+public class DeleteBasketCommandHandler(IBasketRepository repository) : ICommandHandler<DeleteBasketCommand, DeleteBasketResult>
 {
-    // Dependency Injection for database or cache can be done here
-    public Task<DeleteBasketResult> Handle(DeleteBasketCommand command, CancellationToken cancellationToken)
+    public async Task<DeleteBasketResult> Handle(DeleteBasketCommand command, CancellationToken cancellationToken)
     {
-        // Simulate deleting the basket logic
-        // Example: database.RemoveBasket(command.UserName);
+        var result = await repository.DeleteBasketAsync(command.UserName, cancellationToken);
 
-        var isDeleted = true; // Assume the deletion is successful for this example
-
-        return Task.FromResult(new DeleteBasketResult(isDeleted));
+        return new DeleteBasketResult(result);
     }
 }
