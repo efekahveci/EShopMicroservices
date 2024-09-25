@@ -2,6 +2,6 @@
 
 internal static class MessagesConstants
 {
-    public static string ProductNotFound = "Product not found";
-    public static string CategoryNotFound = "Category not found";
+    public const string ProductNotFound = "Product not found";
+    public const string CategoryNotFound = "Category not found";
 }
