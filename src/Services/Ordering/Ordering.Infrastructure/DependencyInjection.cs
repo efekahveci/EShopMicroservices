@@ -8,6 +8,16 @@ public static class DependencyInjection
     {
         var connectionString = configuration.GetConnectionString("Database");
 
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.AddInterceptors(new AuditableEntityInterceptors());
+            options.UseSqlServer(connectionString, sqlOptions =>
+            {
+                sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                sqlOptions.EnableRetryOnFailure(15, TimeSpan.FromSeconds(30), null);
+            });
+        });
+
         return services;
     }
 }

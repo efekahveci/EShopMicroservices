@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ordering.Infrastructure;
-internal class GlobalUsing
-{
-}
+﻿global using Microsoft.EntityFrameworkCore;
+global using Ordering.Domain.Abstractions;
+global using Ordering.Infrastructure.Data;
+global using Ordering.Infrastructure.Data.Interceptors;
