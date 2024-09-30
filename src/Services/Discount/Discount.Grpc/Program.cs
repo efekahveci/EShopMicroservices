@@ -3,7 +3,6 @@ using Discount.Grpc.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddGrpc();
 builder.Services.AddDbContext<DiscountContext>(options =>
 {
@@ -13,7 +12,7 @@ builder.Services.AddDbContext<DiscountContext>(options =>
 var app = builder.Build();
 
 app.UseMigration();
-// Configure the HTTP request pipeline.
+
 app.MapGrpcService<DiscountService>();
 
 app.Run();

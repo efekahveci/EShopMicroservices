@@ -10,8 +10,8 @@ namespace Ordering.Infrastructure.Data.Interceptors
 
         public AuditableEntityInterceptor()
         {
-            _userName = "mehmet";  // İstersek burada dışarıdan alınabilir bir kullanıcı adı da tanımlanabilir.
-            _currentTime = DateTime.UtcNow;  // Her çağrıda aynı DateTime kullanılacak.
+            _userName = "mehmet";
+            _currentTime = DateTime.UtcNow;
         }
 
         public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -34,14 +34,14 @@ namespace Ordering.Infrastructure.Data.Interceptors
             {
                 if (entry.State == EntityState.Added)
                 {
-                    entry.Entity.CreatedBy = _userName;  // Instance üyesi olan _userName kullanılıyor
-                    entry.Entity.CreatedAt = _currentTime;  // Instance üyesi olan _currentTime kullanılıyor
+                    entry.Entity.CreatedBy = _userName;
+                    entry.Entity.CreatedAt = _currentTime;
                 }
 
                 if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
                 {
-                    entry.Entity.LastModifiedBy = _userName;  // Instance üyesi olan _userName kullanılıyor
-                    entry.Entity.LastModified = _currentTime;  // Instance üyesi olan _currentTime kullanılıyor
+                    entry.Entity.LastModifiedBy = _userName;
+                    entry.Entity.LastModified = _currentTime;
                 }
             }
         }

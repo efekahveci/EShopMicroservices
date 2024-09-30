@@ -46,13 +46,13 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
               addressBuilder.Property(a => a.State)
                   .HasMaxLength(50);
 
-              addressBuilder.Property(a => a.Zipcode)
+              addressBuilder.Property(a => a.ZipCode)
                   .HasMaxLength(5)
                   .IsRequired();
           });
 
         builder.ComplexProperty(
-          o => o.BlingAddress, addressBuilder =>
+          o => o.BillingAddress, addressBuilder =>
           {
               addressBuilder.Property(a => a.FirstName)
                    .HasMaxLength(50)
@@ -75,7 +75,7 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
               addressBuilder.Property(a => a.State)
                   .HasMaxLength(50);
 
-              addressBuilder.Property(a => a.Zipcode)
+              addressBuilder.Property(a => a.ZipCode)
                   .HasMaxLength(5)
                   .IsRequired();
           });
